@@ -1,34 +1,46 @@
 // ========== DOSYA: sentinel-spec/proto/sentinel/execution/v1/execution.proto ==========
 syntax = "proto3";
+
+// VQ-Capital Execution Protocol
+// Bu paket, sistemin ürettiği alım/satım kararlarını ve borsaya iletilen 
+// emirlerin sonuç raporlarını standartlaştırır.
 package sentinel.execution.v1;
 
+// TradeSignal (Alım-Satım Sinyali)
+// sentinel-inference (AI Motoru) tarafından üretilir ve NATS (signal.trade.*) kanalına basılır.
+// Geçmiş vektörlerle olan %95+ benzerlik (Cosine Similarity) sonucunda ortaya çıkar.
 message TradeSignal {
   string symbol = 1;
+  
+  // Sinyal Yönü
   enum SignalType {
-    SIGNAL_TYPE_UNSPECIFIED = 0;
-    SIGNAL_TYPE_HOLD = 1;
-    SIGNAL_TYPE_STRONG_BUY = 2;
-    SIGNAL_TYPE_BUY = 3;
-    SIGNAL_TYPE_SELL = 4;
-    SIGNAL_TYPE_STRONG_SELL = 5;
+    SIGNAL_TYPE_UNSPECIFIED = 0; // Tanımsız (Buf Linter zorunluluğu)
+    SIGNAL_TYPE_HOLD = 1;        // Bekle (Pozisyonu koru)
+    SIGNAL_TYPE_STRONG_BUY = 2;  // Güçlü Al
+    SIGNAL_TYPE_BUY = 3;         // Al
+    SIGNAL_TYPE_SELL = 4;        // Sat
+    SIGNAL_TYPE_STRONG_SELL = 5; // Güçlü Sat
   }
   SignalType type = 2;
-  double confidence_score = 3;
-  double recommended_leverage = 4;
-  int64 timestamp = 5;
-  string reason = 6;
+  
+  double confidence_score = 3;      // Yapay zekanın bu karara olan güven skoru (0.0 - 1.0)
+  double recommended_leverage = 4;  // Risk motoruna tavsiye edilen kaldıraç
+  int64 timestamp = 5;              // Sinyalin üretildiği zaman damgası
+  string reason = 6;                // İnsanın okuyabileceği açıklama (Örn: "Geçmiş Vektör Eşleşmesi %98")
 }
 
-// Paper Trade veya Gerçek Borsa işlem sonucunu arşive atmak için
+// ExecutionReport (İşlem Gerçekleşme Raporu)
+// sentinel-execution tarafından üretilir. Emrin borsada (veya Gölge Borsada) 
+// tam olarak hangi fiyattan, ne kadar komisyonla gerçekleştiğini bildirir.
 message ExecutionReport {
   string symbol = 1;
-  string side = 2; // "BUY" or "SELL"
-  double expected_price = 3; // Sinyal geldiği andaki ideal fiyat
-  double execution_price = 4; // Kayma (Slippage) sonrası GERÇEK/GERÇEKLEŞEN fiyat
-  double quantity = 5;
-  double realized_pnl = 6; // Kâr/Zarar
-  double commission = 7; // Komisyon maliyeti
-  int64 latency_ms = 8; // Borsaya gidiş dönüş ağ gecikmesi
-  int64 timestamp = 9; // İşlem zamanı
-  bool is_simulated = 10; // True ise Shadow Exchange (Kağıt), False ise Gerçek Borsa (Live)
+  string side = 2;              // Yön: "BUY" veya "SELL"
+  double expected_price = 3;    // Sinyal üretildiği andaki hedeflenen ideal fiyat
+  double execution_price = 4;   // Slippage (Kayma) sonrası emrin gerçekten dolduğu fiyat
+  double quantity = 5;          // İşlem gören miktar
+  double realized_pnl = 6;      // Bu işlem pozisyon kapattıysa Gerçekleşen Kâr/Zarar (USD)
+  double commission = 7;        // Borsaya ödenen ağ/işlem komisyonu
+  int64 latency_ms = 8;         // Borsaya gidiş-dönüş sırasında kaybedilen süre (Gecikme)
+  int64 timestamp = 9;          // Gerçekleşme zamanı
+  bool is_simulated = 10;       // True: Shadow Exchange (Test/Kağıt), False: Canlı Para
 }

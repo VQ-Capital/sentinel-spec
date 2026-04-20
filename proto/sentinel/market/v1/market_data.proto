@@ -1,41 +1,53 @@
 // ========== DOSYA: sentinel-spec/proto/sentinel/market/v1/market_data.proto ==========
 syntax = "proto3";
 
+// VQ-Capital Market Data Protocol
+// Bu paket, borsalardan (Binance, Hyperliquid) gelen ham verilerin ve 
+// Vektör/Yapay Zeka motorunun ürettiği piyasa durumlarının tanımlarını içerir.
 package sentinel.market.v1;
 
-// Binance veya başka bir borsadan gelen anlık işlem (Tick) verisi
+// AggTrade (Aggregated Trade)
+// Bir borsadan gelen anlık, gerçekleşmiş işlem tikini (Tick) temsil eder.
+// sentinel-ingest servisi tarafından üretilir, NATS (market.trade.*) üzerinden yayınlanır.
 message AggTrade {
-  string symbol = 1; // Örn: "BTCUSDT"
-  double price = 2; // İşlem fiyatı
-  double quantity = 3; // İşlem hacmi
-  int64 timestamp = 4; // Borsa zaman damgası (milisaniye)
-  bool is_buyer_maker = 5; // True ise satıcı piyasa yapıcıdır (Satış baskısı)
+  string symbol = 1;         // İşlem gören varlığın sembolü (Örn: "BTCUSDT")
+  double price = 2;          // İşlemin gerçekleştiği fiyat
+  double quantity = 3;       // İşlem hacmi (Miktar)
+  int64 timestamp = 4;       // Borsanın bildirdiği zaman damgası (Unix Milisaniye)
+  bool is_buyer_maker = 5;   // True ise: Satıcı pasif (Maker) alıcı aktiftir (Taker). (Düşüş baskısını ifade eder)
 }
 
-// Gerçekçi Slippage (Kayma) hesabı için Level 2 Orderbook
+// OrderbookDepth (Emir Defteri Derinliği)
+// Gerçekçi PnL (Kâr/Zarar) ve Slippage (Kayma) hesaplamaları için 
+// Level 2 (Derinlik) emir defteri simülasyonunda kullanılır.
 message OrderbookDepth {
   string symbol = 1;
-  repeated PriceLevel bids = 2; // Alıcılar (Alış emirleri)
-  repeated PriceLevel asks = 3; // Satıcılar (Satış emirleri)
+  repeated PriceLevel bids = 2; // Alış emirleri dizisi (En yüksek fiyat en üstte)
+  repeated PriceLevel asks = 3; // Satış emirleri dizisi (En düşük fiyat en üstte)
   int64 timestamp = 4;
 }
 
+// PriceLevel (Fiyat Seviyesi)
+// Emir defterindeki tek bir satırı temsil eder.
 message PriceLevel {
-  double price = 1;
-  double quantity = 2;
+  double price = 1;    // İlgili kademedeki fiyat
+  double quantity = 2; // İlgili kademede bekleyen toplam likidite
 }
 
-// Qdrant'a atacağımız 1 saniyelik özet Vektör Modeli
+// MarketStateVector (Piyasa Durum Vektörü)
+// sentinel-inference (Yapay Zeka) servisi tarafından 1 saniyelik ham veriler
+// sıkıştırılarak üretilir. Qdrant (Vektör DB) üzerinde "Geçmişe Benzerlik" 
+// (Cosine Similarity) araması yapmak için kullanılır.
 message MarketStateVector {
   string symbol = 1;
-  int64 window_start_time = 2;
-  int64 window_end_time = 3;
-
-  // Feature'lar (0-1 arası normalize edilecek)
-  double price_velocity = 4; // Fiyat değişim hızı
-  double volume_imbalance = 5; // Alıcı hacmi / Satıcı hacmi
-  double sentiment_score = 6; // LLM'den gelen duygu analizi (-1 ile 1 arası)
-
-  // Bunları Qdrant'a gömeceğiz
+  int64 window_start_time = 2;  // 1 saniyelik pencerenin başlangıcı
+  int64 window_end_time = 3;    // 1 saniyelik pencerenin bitişi
+  
+  // Analitik Özellikler (Features)
+  double price_velocity = 4;    // Fiyatın pencere içindeki değişim hızı/ivmesi
+  double volume_imbalance = 5;  // Alıcı hacmi ile Satıcı hacmi arasındaki dengesizlik
+  double sentiment_score = 6;   // NLP (Dil Modeli) tarafından atanan haber duygu skoru (-1 ile 1 arası)
+  
+  // Qdrant'a gömülecek ham vektör dizisi
   repeated double embeddings = 7;
 }
