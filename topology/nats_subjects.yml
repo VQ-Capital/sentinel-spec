@@ -29,3 +29,9 @@ streams:
     subjects:
       - "telemetry.heartbeat.{service_name}"
       - "telemetry.error.{service_name}"
+
+  # 5. İSTİHBARAT VERİLERİ (Intelligence -> Broker -> Inference)
+  intelligence_data:
+    description: "Haber ve sosyal medya analizlerinden gelen duygu skorları."
+    subjects:
+      - "intelligence.sentiment.{source}" # Protobuf: SentimentResponse      
