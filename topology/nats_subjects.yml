@@ -1,0 +1,31 @@
+# ========== DOSYA: sentinel-spec/topology/nats_subjects.yml ==========
+# VQ-Capital NATS Subject Taxonomy
+# Tüm servislerin abone olacağı veya yayın yapacağı kanalların (topic) kesin listesi.
+
+streams:
+  # 1. HAM VERİ AKIŞI (Ingestor -> Broker -> Storage/Inference)
+  market_data:
+    description: "Borsalardan gelen normalize edilmiş ham veriler."
+    subjects:
+      - "market.trade.{exchange}.{symbol}"      # Örn: market.trade.binance.BTCUSDT
+      - "market.orderbook.{exchange}.{symbol}"  # Örn: market.orderbook.hyperliquid.ETHUSD
+      - "market.liquidation.{exchange}.{symbol}"
+
+  # 2. ÜRETİLMİŞ DURUMLAR (Inference -> Broker -> Storage)
+  market_states:
+    description: "Sliding window ve LLM duygu analizi sonrası üretilen durum vektörleri."
+    subjects:
+      - "state.vector.{symbol}"                 # Protobuf: MarketStateVector
+
+  # 3. İŞLEM SİNYALLERİ (Inference -> Broker -> Execution)
+  signals:
+    description: "Inference motorundan çıkan al-sat tavsiyeleri ve risk skorları."
+    subjects:
+      - "signal.trade.{symbol}"                 # Protobuf: TradeSignal
+
+  # 4. SİSTEM DURUMU VE LOGLAR (Tüm Servisler -> Broker -> Infra)
+  telemetry:
+    description: "Servislerin kalp atışları ve hata logları."
+    subjects:
+      - "telemetry.heartbeat.{service_name}"
+      - "telemetry.error.{service_name}"
