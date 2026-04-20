@@ -1,14 +1,23 @@
 syntax = "proto3";
 package sentinel.api.v1;
 
-import "sentinel/market/v1/market_data.proto";
 import "sentinel/execution/v1/execution.proto";
+import "sentinel/market/v1/market_data.proto";
 
-// StreamBundle: WebSocket üzerinden gönderilen tüm mesajların ana zarfı.
 message StreamBundle {
   oneof message {
     sentinel.market.v1.AggTrade trade = 1;
     sentinel.execution.v1.ExecutionReport report = 2;
     sentinel.execution.v1.TradeSignal signal = 3;
+    ControlCommand command = 4;
   }
+}
+
+message ControlCommand {
+  enum CommandType {
+    COMMAND_TYPE_UNSPECIFIED = 0;
+    COMMAND_TYPE_STOP_ALL = 1;
+    COMMAND_TYPE_START_ALL = 2;
+  }
+  CommandType type = 1;
 }
