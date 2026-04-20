@@ -1,4 +1,4 @@
-// ========== DOSYA: sentinel-spec/proto/intelligence.proto ==========
+// ========== DOSYA: sentinel-spec/proto/sentinel/intelligence/v1/intelligence.proto ==========
 syntax = "proto3";
 package sentinel.intelligence.v1; // v1 eklendi
 

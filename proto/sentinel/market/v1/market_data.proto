@@ -1,4 +1,4 @@
-// ========== DOSYA: sentinel-spec/proto/market_data.proto ==========
+// ========== DOSYA: sentinel-spec/proto/sentinel/market/v1/market_data.proto ==========
 syntax = "proto3";
 
 package sentinel.market.v1;
