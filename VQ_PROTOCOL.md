@@ -18,5 +18,7 @@ Sistemimiz, mikrosaniye (HFT) gecikmeleri hedefleyen, olay güdümlü (Event-Dri
 4. **`sentinel-intelligence`:** Gömülü sözlük (Compile-time) kullanan NLP gRPC sunucusu.
 5. **`sentinel-inference`:** Yapay Zeka Beyni. 3D Vektör çıkarır, Qdrant'ta Cosine Similarity arar ve "Sinyal" üretir.
 6. **`sentinel-execution`:** Sinyalleri dinler. Gölge Borsa mantığıyla Gerçekçi Slippage ve Latency simüle ederek PnL hesaplar.
-7. **`sentinel-api` & `sentinel-terminal`:** Yönetim paneli (Flutter/Rust).
+7. **`sentinel-api` & `sentinel-terminal`:** Yönetim paneli.
+   - **Kural:** Terminal kodu İÇİNDE ASLA sabit (hardcoded) IP/URL bulunamaz. Tüm bağlantı ayarları derleme anında (Compile-time) `--dart-define` ile veya çalışma anında alınmalıdır. 
+   - **Kural:** `sentinel-api`, NATS üzerinden okuduğu Protobuf verisini WebSocket zarfına (`StreamBundle`) koyar ve `0.0.0.0:8080` üzerinden dış dünyaya (CORS serbest) açar.
 8. **`sentinel-infra`:** Docker GHCR imajları ile Production-Ready orkestrasyon deposu.
