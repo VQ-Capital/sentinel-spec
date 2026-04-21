@@ -1,0 +1,19 @@
+# sentinel-spec/logic/inference_engine.yaml
+logic:
+  id: "INFERENCE_V1"
+  objective: "Geçmiş piyasa durumlarıyla %95+ benzerlik bularak yüksek olasılıklı sinyal üretmek."
+  
+  parameters:
+    window_size_sec: 10
+    min_ticks_per_window: 10
+    cosine_similarity_threshold: 0.95
+    echo_chamber_suppression: 0.998 # Kendi yankısını duyarsa (mükemmel eşleşme) yoksay.
+
+  features:
+    - price_velocity: "(LastPrice - FirstPrice) / FirstPrice"
+    - volume_imbalance: "(BuyVol - SellVol) / TotalVol"
+    - sentiment_score: "NLP Analyze result (-1.0 to 1.0)"
+
+  guarantees:
+    - "Noise filtering: Düşük işlem hacimli pencerelerden sinyal üretilmez."
+    - "Historical grounding: Sadece Qdrant'ta karşılığı olan durumlar işleme girer."

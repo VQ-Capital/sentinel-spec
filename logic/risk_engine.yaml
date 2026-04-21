@@ -1,0 +1,31 @@
+# sentinel-spec/logic/risk_engine.yaml
+logic:
+  id: "RISK_ENGINE_V1"
+  objective: "10 Dolar bakiye ile batmadan, komisyonları yenerek hayatta kalmak ve büyümek."
+  
+  parameters:
+    initial_balance_usd: 10.00
+    max_drawdown_usd: 5.00
+    risk_per_trade_pct: 0.20  # Her işlemde kasanın %20'si (2$) riske edilir
+    leverage: 50.0            # Mikro-bakiyeyi borsanın notional limitine taşımak için
+    taker_fee_pct: 0.0004     # Shadow Exchange komisyonu
+    cooldown_ms: 5000         # İşlemler arası minimum 5 saniye soğuma
+    lot_precision: 5          # Virgülden sonra 5 basamak (Mikro-lot desteği)
+
+  thresholds:
+    take_profit_pct: 0.005    # %0.5 kâr görünce acıma, kapat.
+    stop_loss_pct: 0.002      # %0.2 zarar görünce mermiyi kes, çık.
+
+  flow:
+    - step: 1
+      action: "Check Wallet: Bakiye < Margin_Required ise sinyali REDDET."
+    - step: 2
+      action: "Check Cooldown: Son işlem < 5sn ise sinyali REDDET."
+    - step: 3
+      action: "Calculate Lot: (Balance * Risk * Leverage) / Price"
+    - step: 4
+      action: "Monitor: Her 100ms'de anlık fiyatı kontrol et. TP/SL vurulursa anında MARKET_ORDER gönder."
+
+  guarantees:
+    - "No overtrading: Aynı yönde sadece tek pozisyon."
+    - "Wallet protection: Bakiye asla negatif olamaz (Shadow limit)."

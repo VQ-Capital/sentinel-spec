@@ -1,0 +1,24 @@
+# sentinel-spec/constraints/architecture.yaml
+constraints:
+  performance:
+    hot_path_languages: ["Rust", "C++"]
+    forbidden_languages: ["Python", "NodeJS", "Go"]
+    latency_budget_microsec:
+      ingest_to_nats: 50
+      inference_to_signal: 200
+      execution_to_gateway: 100
+  
+  memory_safety:
+    allocation_policy: "Zero-allocation in hot loops"
+    error_handling: "Mandatory anyhow::Result, Forbidden .unwrap()"
+    serialization: "Strict Protobuf (prost)"
+
+  networking:
+    message_broker: "NATS JetStream"
+    internal_protocol: "Protobuf over NATS"
+    forbidden_internal_protocol: "HTTP/REST/JSON"
+
+  observability:
+    log_format: "Structured JSON (tracing crate)"
+    metrics_db: "QuestDB"
+    trace_authority: "trace_id (mapped from exchange timestamp)"

@@ -1,0 +1,32 @@
+# sentinel-spec/topology/nats_mesh.yaml
+mesh:
+  streams:
+    market_data:
+      subjects: ["market.trade.*"]
+      publisher: "sentinel-ingest"
+      consumers: ["sentinel-storage", "sentinel-inference", "sentinel-execution"]
+      payload: "sentinel.market.v1.AggTrade"
+
+    market_states:
+      subjects: ["state.vector.*"]
+      publisher: "sentinel-inference"
+      consumers: ["sentinel-storage"]
+      payload: "sentinel.market.v1.MarketStateVector"
+
+    trade_signals:
+      subjects: ["signal.trade.*"]
+      publisher: "sentinel-inference"
+      consumers: ["sentinel-execution"]
+      payload: "sentinel.execution.v1.TradeSignal"
+
+    execution_reports:
+      subjects: ["execution.report.*"]
+      publisher: "sentinel-execution"
+      consumers: ["sentinel-storage", "sentinel-api"]
+      payload: "sentinel.execution.v1.ExecutionReport"
+
+    system_control:
+      subjects: ["control.command"]
+      publisher: "sentinel-api"
+      consumers: ["sentinel-execution"]
+      payload: "sentinel.api.v1.ControlCommand"
