@@ -1,4 +1,3 @@
-# sentinel-spec/constraints/architecture.yaml
 constraints:
   performance:
     hot_path_languages: ["Rust", "C++"]
@@ -18,7 +17,11 @@ constraints:
     internal_protocol: "Protobuf over NATS"
     forbidden_internal_protocol: "HTTP/REST/JSON"
 
+  ai_and_ml:
+    execution_environment: "Native Rust (candle) or C++ (TensorRT)"
+    forbidden_bridges: "Ollama HTTP, External REST APIs"
+    model_type: "Sequence Classification (No Generative Hallucinations)"
+
   observability:
     log_format: "Structured JSON (tracing crate)"
     metrics_db: "QuestDB"
-    trace_authority: "trace_id (mapped from exchange timestamp)"
