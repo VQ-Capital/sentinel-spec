@@ -1,0 +1,6 @@
+service:
+  name: sentinel-execution
+  responsibility: "Sinyalleri dinler, risk limitlerini uygular, borsaya emir iletir ve PnL hesaplar."
+  technology: "Rust"
+  sla:
+    max_response_time_ms: 50

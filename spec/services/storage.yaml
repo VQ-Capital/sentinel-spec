@@ -1,0 +1,4 @@
+service:
+  name: sentinel-storage
+  responsibility: "NATS'tan akan tüm verileri QuestDB ve Qdrant'a kaydeder."
+  technology: "Rust"

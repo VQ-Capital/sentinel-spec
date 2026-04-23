@@ -1,0 +1,40 @@
+linter_rules:
+  - id: HFT-001
+    name: "no_unwrap_or_expect"
+    severity: "fatal"
+    target_repo: "sentinel-*"
+    description: "HFT sistemlerinde Panic kabul edilemez. anyhow::Result kullanılmalı."
+    match_files: ["**/*.rs"]
+    forbidden_patterns:
+      - regex: '\.(unwrap|expect)\('
+        message: "VIOLATION: .unwrap() or .expect() is forbidden. Handle errors gracefully using '?' or match."
+
+  - id: HFT-002
+    name: "no_plain_text_logging"
+    severity: "error"
+    target_repo: "sentinel-*"
+    description: "Grafana Loki entegrasyonu için sadece tracing json kullanılabilir."
+    match_files: ["**/*.rs"]
+    forbidden_patterns:
+      - regex: '\b(println!|print!|dbg!|eprintln!)\s*\('
+        message: "VIOLATION: Standard print macros forbidden. Use tracing::info!, tracing::error! instead."
+
+  - id: HFT-003
+    name: "no_internal_http"
+    severity: "error"
+    target_repo: "sentinel-inference"
+    description: "Inference motoru Dış LLM (Ollama/OpenAI) çağıramaz, C++ Native (gRPC) kullanılmalı."
+    match_files: ["**/*.rs"]
+    forbidden_patterns:
+      - regex: 'reqwest::|hyper::|http::'
+        message: "VIOLATION: HTTP requests are banned in Hot-Path. Use NATS or gRPC."
+
+  - id: HFT-004
+    name: "strict_protobuf_only"
+    severity: "error"
+    target_repo: "sentinel-*"
+    description: "Servis içi haberleşmede JSON/Serde kullanılamaz. Sadece Prost."
+    match_files: ["**/*.rs"]
+    forbidden_patterns:
+      - regex: 'serde_json::to_string|serde_json::from_str'
+        message: "VIOLATION: JSON parsing in hot-loop is slow. Use Prost/Protobuf."

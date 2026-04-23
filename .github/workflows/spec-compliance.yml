@@ -1,0 +1,32 @@
+name: Architecture Spec Compliance
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  spec-linter:
+    name: Enforce VQ-Capital Zero-Tolerance Rules (Rust Engine)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Current Microservice
+        uses: actions/checkout@v4
+        with:
+          path: current-repo
+
+      - name: Checkout VQ-Capital Spec
+        uses: actions/checkout@v4
+        with:
+          repository: VQ-Capital/sentinel-spec
+          path: sentinel-spec
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Architecture Linter
+        run: |
+          cd sentinel-spec/scripts/vq-spec-tools
+          cargo run --release --quiet -- lint \
+            --target-dir ../../../current-repo \
+            --repo-name ${{ github.event.repository.name }} \
+            --spec-dir ../../

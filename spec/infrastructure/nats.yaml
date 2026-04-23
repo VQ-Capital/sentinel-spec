@@ -1,0 +1,4 @@
+infrastructure:
+  name: nats-broker
+  type: message-broker
+  responsibility: "Sistemin mikrosaniye gecikmeli iletişim ve Pub/Sub omurgası."

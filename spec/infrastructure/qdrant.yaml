@@ -1,0 +1,4 @@
+infrastructure:
+  name: qdrant-memory
+  type: vector-database
+  responsibility: "AI çıkarım (Inference) vektörlerini saklar ve Cosine benzerlik araması yapar."

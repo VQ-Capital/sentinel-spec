@@ -1,0 +1,6 @@
+service:
+  name: sentinel-ingest
+  responsibility: "Borsalardan (Binance) WebSocket ile ham veri alır, Proto'ya çevirir, NATS'a basar."
+  technology: "Rust (tokio)"
+  sla:
+    max_response_time_ms: 10

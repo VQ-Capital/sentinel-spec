@@ -1,0 +1,4 @@
+infrastructure:
+  name: questdb-archive
+  type: time-series-database
+  responsibility: "Geçmiş verileri (Tick) ve PnL (Kâr/Zarar) metriklerini kalıcı olarak saklar."
