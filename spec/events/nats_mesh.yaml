@@ -30,3 +30,21 @@ mesh:
       publisher: "sentinel-api"
       consumers: ["sentinel-execution"]
       payload: "sentinel.api.v1.ControlCommand"
+    
+    wallet_snapshots:
+      subjects: ["wallet.equity.snapshot"]
+      publisher: "sentinel-wallet"
+      consumers: ["sentinel-execution", "sentinel-terminal"]
+      payload: "sentinel.wallet.v1.EquitySnapshot"
+
+    raw_news:
+      subjects: ["news.raw.{source}"]
+      publisher: "sentinel-news-ingest"
+      consumers: ["sentinel-intelligence"]
+      payload: "sentinel.market.v1.RawNewsEvent"
+
+    semantic_vectors:
+      subjects: ["intelligence.news.vector"]
+      publisher: "sentinel-intelligence"
+      consumers: ["sentinel-inference", "sentinel-storage"]
+      payload: "sentinel.intelligence.v1.SemanticVector"      

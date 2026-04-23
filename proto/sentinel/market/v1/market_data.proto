@@ -17,6 +17,15 @@ message AggTrade {
   bool is_buyer_maker = 5;   // True ise: Satıcı pasif (Maker) alıcı aktiftir (Taker). (Düşüş baskısını ifade eder)
 }
 
+// RawNewsEvent (Ham Haber Akışı)
+// sentinel-news-ingest servisi gürültüyü eledikten sonra basar.
+message RawNewsEvent {
+  string source = 1;      // Örn: "binance", "twitter"
+  string headline = 2;    // Başlık
+  string content = 3;     // İçerik (Varsa)
+  int64 timestamp = 4;
+}
+
 // OrderbookDepth (Emir Defteri Derinliği)
 // Gerçekçi PnL (Kâr/Zarar) ve Slippage (Kayma) hesaplamaları için 
 // Level 2 (Derinlik) emir defteri simülasyonunda kullanılır.

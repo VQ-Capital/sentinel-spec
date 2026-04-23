@@ -35,3 +35,15 @@ streams:
     description: "Haber ve sosyal medya analizlerinden gelen duygu skorları."
     subjects:
       - "intelligence.sentiment.{source}" # Protobuf: SentimentResponse      
+
+  # 6. MUHASEBE VE VARLIK (Wallet -> Broker -> Execution/Terminal)
+  accounting:
+    description: "Merkezi Hazine bakiyesi ve mutabakat raporları."
+    subjects:
+      - "wallet.equity.snapshot"
+
+  # 7. SÖZEL VERİ (News Ingest -> Broker -> Intelligence)
+  news_feed:
+    description: "Semantik filtrelemeden geçmiş ham haber ve Twitter akışları."
+    subjects:
+      - "news.raw.{source}" # Örn: news.raw.binance, news.raw.twitter      

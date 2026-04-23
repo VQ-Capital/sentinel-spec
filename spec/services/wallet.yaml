@@ -1,0 +1,6 @@
+service:
+  name: sentinel-wallet
+  responsibility: "Sistemin Merkezi Hazinesi (VCA). Gerçek borsa bakiyesi ile iç defteri mutabakat eder (Reconciliation), anlık Equity (Varlık) durumunu NATS'a basar."
+  technology: "Rust"
+  sla:
+    max_response_time_ms: 10

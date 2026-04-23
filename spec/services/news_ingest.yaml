@@ -1,0 +1,6 @@
+service:
+  name: sentinel-news-ingest
+  responsibility: "RSS, Twitter ve Borsa duyurularını dinler. Sözel gürültüyü (noise) temizleyerek ham metin olaylarını (RawNewsEvent) NATS'a iletir."
+  technology: "Rust (tokio/tungstenite)"
+  sla:
+    max_response_time_ms: 100
