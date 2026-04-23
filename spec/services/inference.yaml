@@ -1,6 +1,6 @@
 service:
   name: sentinel-inference
   responsibility: "Vektör çıkarır, Qdrant'ta benzerlik arar, TradeSignal üretir."
-  technology: "Rust (candle) / C++"
+  technology: "Rust"
   sla:
     max_response_time_ms: 200

@@ -1,0 +1,4 @@
+service:
+  name: sentinel-terminal
+  responsibility: "Canlı işlem defteri, açık pozisyonlar ve bakiye grafiklerini sunan profesyonel Quant paneli."
+  technology: "Flutter (Dart)"

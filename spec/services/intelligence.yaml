@@ -1,0 +1,6 @@
+service:
+  name: sentinel-intelligence
+  responsibility: "Finansal metinlerin ve haberlerin duygu analizini (Sentiment) O(1) hızında yapan gRPC sunucusu."
+  technology: "Rust / C++ (candle)"
+  sla:
+    max_response_time_ms: 5
