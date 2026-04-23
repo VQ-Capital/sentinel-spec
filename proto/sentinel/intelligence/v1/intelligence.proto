@@ -24,3 +24,13 @@ message AnalyzeTextResponse {
   // -1.0 (Kesin Düşüş/Bearish) ile +1.0 (Kesin Yükseliş/Bullish) arasında normalize edilmiş skor
   double score = 1; 
 }
+// SemanticVector (Anlamsal Vektör)
+// sentinel-intelligence tarafından haberler işlendikten sonra üretilir.
+// Inference motoru bu skoru fiyat vektörü ile birleştirerek karar verir.
+message SemanticVector {
+  string symbol = 1;              // Hangi coin ile ilgili olduğu
+  double sentiment_score = 2;     // -1.0 (Ayı) ile +1.0 (Boğa) arası skor
+  string source = 3;              // Haberin kaynağı
+  string original_headline = 4;   // İşlenen metin
+  int64 timestamp = 5;            // Zaman damgası
+}
