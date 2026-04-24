@@ -11,7 +11,8 @@ message StreamBundle {
     sentinel.execution.v1.ExecutionReport report = 2;
     sentinel.execution.v1.TradeSignal signal = 3;
     ControlCommand command = 4;
-    sentinel.wallet.v1.EquitySnapshot equity = 5; // YENİ: Zarfın içine eklendi
+    sentinel.wallet.v1.EquitySnapshot equity = 5;
+    sentinel.market.v1.MarketStateVector vector = 6; // ✅ YENİ: Z-Score verisi eklendi
   }
 }
 
