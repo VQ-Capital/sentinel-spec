@@ -1,10 +1,21 @@
-# sentinel-spec/logic/inference_engine.yaml
+# ========== DOSYA: sentinel-spec/spec/logic/inference_engine.yaml ==========
 logic:
-  id: "INFERENCE_V2_COLD_START"
-  objective: "Yeterli veri toplanana kadar beklemek, gürültüyü elemek."
+  id: "INFERENCE_V3_FUSION_ENGINE"
+  objective: "Z-Score normalizasyonu ve Orderbook+Trade füzyonu ile düşük gecikmeli piyasa durumu tespiti."
   
-  parameters:
-    window_size_sec: 30       # 30 Saniyelik pencereler (Gürültü filtresi)
-    min_ticks_per_window: 25  # Hacimsiz pencereleri yoksay
-    warmup_vectors: 50        # DB sıfırlandığında ilk 50 vektörü sadece kaydet, işlem açma
-    cosine_similarity_threshold: 0.97 # %97 altı eşleşmeleri reddet
+  # 1. PENCERELEME VE GÜRÜLTÜ FİLTRESİ (V2'den Gelenler)
+  windowing:
+    window_size_sec: 30         # Verilerin gruplandığı zaman penceresi
+    min_ticks_per_window: 25    # Hacimsiz pencerelerin (gürültü) elenmesi için eşik
+    cosine_similarity_threshold: 0.985 # %98.5 altı benzerlikleri sinyal olarak görme
+
+  # 2. ISINMA VE Z-SCORE (V3 Gelişmiş Matematik)
+  math:
+    warmup_vectors: 500         # Z-Score motorunun istatistiksel kararlılığı için gereken başlangıç verisi
+    z_score_ema_window: 1000    # EMA (Hareketli Ortalama) için baz alınan örneklem sayısı
+    
+  # 3. FÜZYON AĞIRLIKLARI (V3 Alpha Katmanı)
+  fusion:
+    orderbook_weight: 0.6       # Tahta derinliği (Imbalance) baskınlığı
+    trade_flow_weight: 0.4      # Gerçekleşen emir akışı ağırlığı
+    sentiment_decay_ms: 3600000 # Haberin etkisini yitirme süresi (1 Saat)

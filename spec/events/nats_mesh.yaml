@@ -48,3 +48,9 @@ mesh:
       publisher: "sentinel-intelligence"
       consumers: ["sentinel-inference", "sentinel-storage"]
       payload: "sentinel.intelligence.v1.SemanticVector"      
+
+    market_orderbook:
+      subjects: ["market.orderbook.*"]
+      publisher: "sentinel-ingest"
+      consumers: ["sentinel-inference", "sentinel-storage"]
+      payload: "sentinel.market.v1.OrderbookDepth"      
