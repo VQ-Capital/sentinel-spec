@@ -1,7 +1,7 @@
 # ========== DOSYA: sentinel-spec/spec/logic/inference_engine.yaml ==========
 logic:
   id: "INFERENCE_V3_FUSION_ENGINE"
-  objective: "Z-Score normalizasyonu ve Orderbook+Trade füzyonu ile düşük gecikmeli piyasa durumu tespiti."
+  objective: "Z-Score normalizasyonu ve Orderbook+Trade füzyonu ile düşük gecikmeli piyasa durumu tespiti. Fiyat, Tahta, Haber ve Zincir (Mempool) verilerinin 4 boyutlu vektör füzyonu."
   
   # 1. PENCERELEME VE GÜRÜLTÜ FİLTRESİ (V2'den Gelenler)
   windowing:
@@ -11,6 +11,7 @@ logic:
 
   # 2. ISINMA VE Z-SCORE (V3 Gelişmiş Matematik)
   math:
+    vector_dimensions: 4 # [Price_Vel, Vol_Imbalance, Sentiment, Chain_Urgency]
     warmup_vectors: 500         # Z-Score motorunun istatistiksel kararlılığı için gereken başlangıç verisi
     z_score_ema_window: 1000    # EMA (Hareketli Ortalama) için baz alınan örneklem sayısı
     
@@ -19,3 +20,4 @@ logic:
     orderbook_weight: 0.6       # Tahta derinliği (Imbalance) baskınlığı
     trade_flow_weight: 0.4      # Gerçekleşen emir akışı ağırlığı
     sentiment_decay_ms: 3600000 # Haberin etkisini yitirme süresi (1 Saat)
+    mempool_urgency_impact: "High fee spike filters buy signals" # Zincir aciliyeti alım sinyallerini doğrular.

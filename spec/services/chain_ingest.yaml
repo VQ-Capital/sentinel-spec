@@ -1,0 +1,6 @@
+service:
+  name: sentinel-chain-ingest
+  responsibility: "Bitcoin Mempool havuzunu dinleyerek onaylanmamış işlemlerdeki aciliyet ve tıkanıklık skorunu (Urgency) üretir."
+  technology: "Rust (tokio/tungstenite)"
+  sla:
+    max_response_time_ms: 100
