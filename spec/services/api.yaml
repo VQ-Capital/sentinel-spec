@@ -1,0 +1,7 @@
+service:
+  name: sentinel-api
+  domain_alias: "sentinel-stream-gateway"
+  responsibility: "NATS omurgasındaki ikili (Binary/Protobuf) veri akışını alır, WebSocket üzerinden dış dünyaya (Terminal'e) O(1) gecikme ile çoğaltarak (Multiplexing) iletir. Aynı zamanda Terminal'den gelen 'Kill Switch' gibi acil durum komutlarını NATS'a basan bir güvenlik kapısıdır."
+  technology: "Rust (axum/tokio)"
+  sla:
+    max_response_time_ms: 10

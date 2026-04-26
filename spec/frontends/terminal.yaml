@@ -1,4 +1,5 @@
 service:
   name: sentinel-terminal
-  responsibility: "Canlı işlem defteri, açık pozisyonlar ve bakiye grafiklerini sunan profesyonel Quant paneli."
-  technology: "Flutter (Dart)"
+  domain_alias: "sentinel-quant-dashboard"
+  responsibility: "Sistemin tek görsel arayüzü. Stream Gateway'den (API) akan canlı Protobuf verilerini çözümler; Z-Score radarını, PnL eğrisini, SLA (Latency) ihlallerini ve açık pozisyonları anlık olarak çizer. Sisteme asla doğrudan işlem emri gönderemez, sadece izler ve 'Kill Switch' tetikleyebilir."
+  technology: "Flutter (Dart) / Riverpod"

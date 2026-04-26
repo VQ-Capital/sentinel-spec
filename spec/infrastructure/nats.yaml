@@ -1,4 +1,6 @@
 infrastructure:
   name: nats-broker
+  target_repo: "sentinel-broker"
+  domain_alias: "sentinel-event-mesh"
   type: message-broker
-  responsibility: "Sistemin mikrosaniye gecikmeli iletişim ve Pub/Sub omurgası."
+  responsibility: "Sistemin sıfır gecikmeli (Zero-Latency) merkezi sinir sistemi. Servislerin birbiriyle konuşmasını sağlayan Pub/Sub omurgasıdır. Stream limitleri, bellek kısıtlamaları ve veri saklama politikaları (Retention) bu IaC deposunda tanımlanır."
