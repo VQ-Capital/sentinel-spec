@@ -1,3 +1,4 @@
+# ========== DOSYA: sentinel-spec/spec/constraints/linter-rules.yaml ==========
 linter_rules:
   - id: HFT-001
     name: "no_unwrap_or_expect"
@@ -32,9 +33,10 @@ linter_rules:
   - id: HFT-004
     name: "strict_protobuf_only"
     severity: "error"
-    target_repo: "sentinel-*"
-    description: "Servis içi haberleşmede JSON/Serde kullanılamaz. Sadece Prost."
+    # ✅ DÜZELTME: Ingest servisleri (Binance/Mempool json okuduğu için) hariç tutuldu.
+    target_repo: "(sentinel-inference|sentinel-execution|sentinel-storage|sentinel-wallet|sentinel-api)"
+    description: "İç servis haberleşmesinde JSON/Serde kullanılamaz. Sadece Prost (Protobuf)."
     match_files: ["**/*.rs"]
     forbidden_patterns:
       - regex: 'serde_json::to_string|serde_json::from_str'
-        message: "VIOLATION: JSON parsing in hot-loop is slow. Use Prost/Protobuf."
+        message: "VIOLATION: JSON parsing in hot-loop is slow. Internal IPC must use Prost/Protobuf."

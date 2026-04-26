@@ -1,4 +1,4 @@
-# sentinel-spec/topology/nats_mesh.yaml
+# ========== DOSYA: sentinel-spec/spec/events/nats_mesh.yaml ==========
 mesh:
   streams:
     market_data:
@@ -10,19 +10,19 @@ mesh:
     market_states:
       subjects: ["state.vector.*"]
       publisher: "sentinel-inference"
-      consumers: ["sentinel-storage"]
+      consumers: ["sentinel-storage", "sentinel-api"] # API terminale Z-Score çizdirmek için okur
       payload: "sentinel.market.v1.MarketStateVector"
 
     trade_signals:
       subjects: ["signal.trade.*"]
       publisher: "sentinel-inference"
-      consumers: ["sentinel-execution"]
+      consumers: ["sentinel-execution", "sentinel-api"] # API terminalde göstermek için okur
       payload: "sentinel.execution.v1.TradeSignal"
 
     execution_reports:
       subjects: ["execution.report.*"]
       publisher: "sentinel-execution"
-      consumers: ["sentinel-storage", "sentinel-api"]
+      consumers: ["sentinel-storage", "sentinel-api", "sentinel-wallet"]
       payload: "sentinel.execution.v1.ExecutionReport"
 
     system_control:
@@ -34,7 +34,7 @@ mesh:
     wallet_snapshots:
       subjects: ["wallet.equity.snapshot"]
       publisher: "sentinel-wallet"
-      consumers: ["sentinel-execution", "sentinel-terminal"]
+      consumers: ["sentinel-execution", "sentinel-api"] # TERMINAL YERİNE API OKUR (Köprü)
       payload: "sentinel.wallet.v1.EquitySnapshot"
 
     raw_news:
@@ -53,4 +53,11 @@ mesh:
       subjects: ["market.orderbook.*"]
       publisher: "sentinel-ingest"
       consumers: ["sentinel-inference", "sentinel-storage"]
-      payload: "sentinel.market.v1.OrderbookDepth"      
+      payload: "sentinel.market.v1.OrderbookDepth"
+
+    # ✅ YENİ: MEMPOOL VERİ AKIŞI MESH AĞINA EKLENDİ
+    chain_urgency:
+      subjects: ["chain.urgency.*"]
+      publisher: "sentinel-chain-ingest"
+      consumers: ["sentinel-inference", "sentinel-storage"]
+      payload: "sentinel.market.v1.ChainUrgencyEvent"

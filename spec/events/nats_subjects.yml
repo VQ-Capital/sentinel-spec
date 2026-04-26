@@ -1,4 +1,4 @@
-# ========== DOSYA: sentinel-spec/topology/nats_subjects.yml ==========
+# ========== DOSYA: sentinel-spec/spec/events/nats_subjects.yml ==========
 # VQ-Capital NATS Subject Taxonomy
 # Tüm servislerin abone olacağı veya yayın yapacağı kanalların (topic) kesin listesi.
 
@@ -9,41 +9,46 @@ streams:
     subjects:
       - "market.trade.{exchange}.{symbol}"      # Örn: market.trade.binance.BTCUSDT
       - "market.orderbook.{exchange}.{symbol}"  # Örn: market.orderbook.hyperliquid.ETHUSD
-      - "market.liquidation.{exchange}.{symbol}"
 
-  # 2. ÜRETİLMİŞ DURUMLAR (Inference -> Broker -> Storage)
+  # 2. ON-CHAIN VERİ AKIŞI (Chain Ingestor -> Broker -> Inference)
+  onchain_data:
+    description: "Blockchain ağlarından (Mempool) gelen ön-ticaret (Pre-Trade) uyarıları."
+    subjects:
+      - "chain.urgency.{symbol}"                # Protobuf: ChainUrgencyEvent
+
+  # 3. ÜRETİLMİŞ DURUMLAR (Inference -> Broker -> Storage)
   market_states:
-    description: "Sliding window ve LLM duygu analizi sonrası üretilen durum vektörleri."
+    description: "Sliding window, LLM ve Zincir verisi füzyonu sonrası üretilen durum vektörleri."
     subjects:
       - "state.vector.{symbol}"                 # Protobuf: MarketStateVector
 
-  # 3. İŞLEM SİNYALLERİ (Inference -> Broker -> Execution)
+  # 4. İŞLEM SİNYALLERİ (Inference -> Broker -> Execution)
   signals:
     description: "Inference motorundan çıkan al-sat tavsiyeleri ve risk skorları."
     subjects:
       - "signal.trade.{symbol}"                 # Protobuf: TradeSignal
 
-  # 4. SİSTEM DURUMU VE LOGLAR (Tüm Servisler -> Broker -> Infra)
+  # 5. SİSTEM DURUMU VE LOGLAR (Tüm Servisler -> Broker -> Infra)
   telemetry:
     description: "Servislerin kalp atışları ve hata logları."
     subjects:
       - "telemetry.heartbeat.{service_name}"
       - "telemetry.error.{service_name}"
 
-  # 5. İSTİHBARAT VERİLERİ (Intelligence -> Broker -> Inference)
+  # 6. İSTİHBARAT VERİLERİ (Intelligence -> Broker -> Inference)
   intelligence_data:
     description: "Haber ve sosyal medya analizlerinden gelen duygu skorları."
     subjects:
-      - "intelligence.sentiment.{source}" # Protobuf: SentimentResponse      
+      - "intelligence.sentiment.{source}"       # Protobuf: SemanticVector
 
-  # 6. MUHASEBE VE VARLIK (Wallet -> Broker -> Execution/Terminal)
+  # 7. MUHASEBE VE VARLIK (Wallet -> Broker -> Execution/API)
   accounting:
     description: "Merkezi Hazine bakiyesi ve mutabakat raporları."
     subjects:
       - "wallet.equity.snapshot"
 
-  # 7. SÖZEL VERİ (News Ingest -> Broker -> Intelligence)
+  # 8. SÖZEL VERİ (News Ingest -> Broker -> Intelligence)
   news_feed:
     description: "Semantik filtrelemeden geçmiş ham haber ve Twitter akışları."
     subjects:
-      - "news.raw.{source}" # Örn: news.raw.binance, news.raw.twitter      
+      - "news.raw.{source}"                     # Protobuf: RawNewsEvent
