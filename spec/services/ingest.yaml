@@ -1,6 +1,7 @@
 service:
   name: sentinel-ingest
-  responsibility: "Borsalardan (Binance) WebSocket ile ham veri alır, Proto'ya çevirir, NATS'a basar."
-  technology: "Rust (tokio)"
+  domain_alias: "sentinel-market-ingest"
+  responsibility: "Borsaların (Binance, Hyperliquid) WebSocket ve FIX hatlarından gelen saf sayısal verileri (L2 Orderbook, Trades) sıfır bellek tahsisi (Zero-Allocation) ile yakalar. Olayları Protobuf'a çevirerek NATS omurgasına basar."
+  technology: "Rust (tokio/tungstenite)"
   sla:
     max_response_time_ms: 10

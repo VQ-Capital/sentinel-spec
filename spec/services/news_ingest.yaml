@@ -1,6 +1,7 @@
 service:
   name: sentinel-news-ingest
-  responsibility: "RSS, Twitter ve Borsa duyurularını dinler. Sözel gürültüyü (noise) temizleyerek ham metin olaylarını (RawNewsEvent) NATS'a iletir."
-  technology: "Rust (tokio/tungstenite)"
+  domain_alias: "sentinel-semantic-ingest"
+  responsibility: "İnsan dilindeki karmaşık verileri (RSS, Twitter, Borsa Duyuruları) mikrosaniyeler içinde gürültüden arındırır. V4 mimarisinde bu servis bir 'Haber Okuyucu' değil, Piyasaların Duygu Haritasını çıkartan bir 'Semantik Veri Filtresi'dir."
+  technology: "Rust (tokio/tungstenite) + Jaccard Fuzzy Deduplication + SHA256"
   sla:
     max_response_time_ms: 100
