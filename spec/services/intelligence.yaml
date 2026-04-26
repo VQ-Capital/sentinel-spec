@@ -1,6 +1,7 @@
 service:
   name: sentinel-intelligence
-  responsibility: "Finansal metinlerin ve haberlerin duygu analizini (Sentiment) O(1) hızında yapan gRPC sunucusu."
-  technology: "Rust / C++ (candle)"
+  domain_alias: "sentinel-neural-engine"
+  responsibility: "Sistemin Duygu Merkezi (The Amygdala). İki katmanlı çalışır: O(1) hızında statik sözlük (Lexicon) ve ONNX/CUDA tabanlı yerel LLM (FinancialBERT). Haberleri okur, duygu skoruna (Sentiment) çevirir. Asla internetten dış AI API'si çağırmaz."
+  technology: "Rust / C++ (ONNX Runtime)"
   sla:
-    max_response_time_ms: 5
+    max_response_time_ms: 15

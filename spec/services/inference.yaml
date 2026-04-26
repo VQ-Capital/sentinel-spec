@@ -1,6 +1,7 @@
 service:
   name: sentinel-inference
-  responsibility: "Vektör çıkarır, Qdrant'ta benzerlik arar, TradeSignal üretir."
+  domain_alias: "sentinel-quant-fusion"
+  responsibility: "Sistemin Beyni (The Brain). Fiyat hızını, tahta dengesizliğini, yapay zeka duygu skorunu ve blockchain aciliyetini Z-Score ile normalize edip 4 boyutlu bir vektörde birleştirir. Qdrant'ta Cosine Similarity ile geçmiş anıları arayıp saniyeler içinde karar (Sinyal) üretir."
   technology: "Rust"
   sla:
-    max_response_time_ms: 200
+    max_response_time_ms: 25

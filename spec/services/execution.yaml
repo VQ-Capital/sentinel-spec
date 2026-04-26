@@ -1,6 +1,7 @@
 service:
   name: sentinel-execution
-  responsibility: "Sinyalleri dinler, risk limitlerini uygular, borsaya emir iletir ve PnL hesaplar."
+  domain_alias: "sentinel-risk-executor"
+  responsibility: "Sistemin Elleri ve Kalkanı. Quant Fusion motorundan gelen sinyalleri alır, cüzdanın Drawdown ve Exposure (Risk) limitlerini kontrol eder. Güvenliyse, mikrosaniyeler içinde borsaya (Binance/Hyperliquid) emri iletir. SLA ihlallerinde Self-Healing (Defansif) moda geçer."
   technology: "Rust"
   sla:
     max_response_time_ms: 50

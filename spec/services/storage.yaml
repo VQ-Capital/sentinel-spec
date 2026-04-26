@@ -1,4 +1,5 @@
 service:
   name: sentinel-storage
-  responsibility: "NATS'tan akan tüm verileri QuestDB ve Qdrant'a kaydeder."
+  domain_alias: "sentinel-memory-archiver"
+  responsibility: "Sistemin Hafızası (The Memory). NATS üzerindeki yüksek hızlı veri akışını Time-Series (QuestDB) ve Vector-DB (Qdrant) ortamlarına zero-allocation prensibiyle kaydeder."
   technology: "Rust"

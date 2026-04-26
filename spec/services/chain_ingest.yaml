@@ -1,6 +1,7 @@
 service:
   name: sentinel-chain-ingest
-  responsibility: "Bitcoin Mempool havuzunu dinleyerek onaylanmamış işlemlerdeki aciliyet ve tıkanıklık skorunu (Urgency) üretir."
+  domain_alias: "sentinel-onchain-ingest"
+  responsibility: "Ağdaki onaylanmamış işlemleri (Mempool) izleyerek 'Pre-Trade' (İşlem Öncesi) erken uyarı sinyallerini üretir. Fiyat düşmeden veya çıkmadan saniyeler önce oluşan ağ tıkanıklığını (Urgency) ölçer."
   technology: "Rust (tokio/tungstenite)"
   sla:
     max_response_time_ms: 100
