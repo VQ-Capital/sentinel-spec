@@ -1,0 +1,18 @@
+logic:
+  id: "JACCARD_SPAM_FILTER_V1"
+  objective: "Semantic Ingest (Haber) servisinden gelen aynı veya benzer clickbait haberlerin sistemi manipüle etmesini (Spam) Zero-Allocation yöntemleriyle engellemek."
+  
+  mechanisms:
+    exact_match: 
+      type: "SHA256 Hash"
+      description: "Birebir aynı başlıkları O(1) hızında reddeder."
+    
+    fuzzy_match:
+      type: "Jaccard Similarity"
+      threshold: 0.75
+      description: "Gelen haberleri Token'lara (kelimelere) böler. Son 500 haberle karşılaştırır. %75'ten fazla benzerlik varsa ('Bitcoin yükseldi' vs 'Bitcoin bugün yükseldi') haberi çöpe atar."
+      
+  memory:
+    cache_type: "Moka (Async TTL Cache)"
+    time_to_live: "12 Saat"
+    capacity: "5000 Hash"

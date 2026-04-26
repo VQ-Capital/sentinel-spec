@@ -1,27 +1,20 @@
-# sentinel-spec/logic/risk_engine.yaml
 logic:
-  id: "RISK_ENGINE_V2_SELF_HEALING"
-  objective: "10 Dolar bakiye ile batmadan, komisyonları yenerek hayatta kalmak ve büyümek."
+  id: "RISK_ENGINE_V3_DYNAMIC_GUARD"
+  objective: "Cüzdanı korumak, slipajı (kaymayı) yönetmek ve SLA ihlallerinde sistemi otonom olarak Defansif Moda (Self-Healing) geçirmek."
   
   parameters:
-    # Tüm bu değerler artık ENV variable üzerinden dinamik okunacak
-    initial_balance_usd: 10.00
-    max_drawdown_usd: 5.00
-    base_risk_per_trade_pct: 0.20  # Kasanın %20'si
-    base_leverage: 20.0            # Daha güvenli 20x kaldıraç
-    cooldown_ms: 10000             # 10 saniye işlem arası soğuma
-    min_hold_time_ms: 45000        # Anti-whipsaw: Pozisyon en az 45 sn tutulacak
+    initial_balance_usd: "ENV(INITIAL_BALANCE)"
+    max_drawdown_usd: "ENV(MAX_DRAWDOWN)"
+    base_risk_per_trade_pct: "ENV(RISK_PCT)"
+    base_leverage: "ENV(LEVERAGE)"
+    cooldown_ms: "ENV(COOLDOWN_MS)"
+    min_hold_time_ms: "ENV(MIN_HOLD_MS)"
 
   self_healing_mechanisms:
-    defensive_mode_trigger: "Eğer kasa %15 erirse (Drawdown > %15)"
-    defensive_action: "Riski yarıya indir (%10), Kaldıracı yarıya indir (10x)"
-    recovery_action: "Kasa tekrar %5 kâra geçerse normal ayarlara dön"
-
-  thresholds:
-    take_profit_pct: 0.005    # %0.5
-    stop_loss_pct: 0.002      # %0.2
+    defensive_mode_trigger: "Kasa (Equity) %15 erirse VEYA borsada peş peşe 3 kez SLA Timeout yaşanırsa tetiklenir."
+    defensive_action: "Riski yarıya indir, kaldıracı düşür, sadece emin olunan (Z > 1.2) sinyallere gir."
+    recovery_action: "SLA (Ping) normale dönerse veya PnL toparlarsa normal ayarlara dön."
 
   sla_watchdog:
-    execution_timeout_ms: 50    # Maksimum kabul edilebilir emir iletim süresi
-    max_violations_threshold: 3 # Defansif moda geçiş için gereken peş peşe hata sayısı
-    signal_max_latency_ms: 2000 # Sinyalin bayat sayılması için gereken süre    
+    execution_timeout_ms: 50    # Bu sürede borsa API dönmezse işlem düşer (Dropped)
+    signal_max_latency_ms: 2000 # Inference'dan çıkan sinyal 2 saniyeden eskiyse çöpe atılır (Bayat Sinyal)

@@ -1,23 +1,20 @@
-# ========== DOSYA: sentinel-spec/spec/logic/inference_engine.yaml ==========
 logic:
-  id: "INFERENCE_V3_FUSION_ENGINE"
-  objective: "Z-Score normalizasyonu ve Orderbook+Trade füzyonu ile düşük gecikmeli piyasa durumu tespiti. Fiyat, Tahta, Haber ve Zincir (Mempool) verilerinin 4 boyutlu vektör füzyonu."
+  id: "QUANT_FUSION_V4_1_OMNISCIENCE"
+  objective: "4 Boyutlu (Fiyat Hızı, Tahta Dengesi, NLP Duygu, Zincir Aciliyeti) veri akışını Z_SCALE (10000x) ile kayıpsız normalize edip, Qdrant'ta Cosine Similarity ile anı taraması yapmak."
   
-  # 1. PENCERELEME VE GÜRÜLTÜ FİLTRESİ (V2'den Gelenler)
   windowing:
-    window_size_sec: 30         # Verilerin gruplandığı zaman penceresi
-    min_ticks_per_window: 25    # Hacimsiz pencerelerin (gürültü) elenmesi için eşik
-    cosine_similarity_threshold: 0.985 # %98.5 altı benzerlikleri sinyal olarak görme
+    window_size_sec: "ENV(WINDOW_SIZE_SEC)"         # 30 sn
+    min_ticks_per_window: "ENV(MIN_TICKS)"          # 25 Tick
+    cosine_similarity_threshold: "ENV(SIMILARITY_THRESHOLD)" # Yuvarlama toleransı (1.01) dahil edilmiştir.
 
-  # 2. ISINMA VE Z-SCORE (V3 Gelişmiş Matematik)
   math:
-    vector_dimensions: 4 # [Price_Vel, Vol_Imbalance, Sentiment, Chain_Urgency]
-    warmup_vectors: 500         # Z-Score motorunun istatistiksel kararlılığı için gereken başlangıç verisi
-    z_score_ema_window: 1000    # EMA (Hareketli Ortalama) için baz alınan örneklem sayısı
+    vector_dimensions: 4 # [Z_Vel, Z_Imb, Z_Sent, Z_Urg]
+    precision_scale: "ENV(Z_SCALE)"                 # Float kayıplarını önlemek için Z-Skoru büyütme (Örn: 10000.0)
+    warmup_vectors: "ENV(WARMUP_VECTORS)"           # İstikrarlı z-skor için başlangıç bekleme süresi
+    z_score_ema_window: 1000                        # EMA bazlı sürekli varyans hesabı
     
-  # 3. FÜZYON AĞIRLIKLARI (V3 Alpha Katmanı)
   fusion:
-    orderbook_weight: 0.6       # Tahta derinliği (Imbalance) baskınlığı
-    trade_flow_weight: 0.4      # Gerçekleşen emir akışı ağırlığı
-    sentiment_decay_ms: 3600000 # Haberin etkisini yitirme süresi (1 Saat)
-    mempool_urgency_impact: "High fee spike filters buy signals" # Zincir aciliyeti alım sinyallerini doğrular.
+    orderbook_weight: 0.6                           # Tahta (Pasif Emir) baskınlığı
+    trade_flow_weight: 0.4                          # Gerçekleşen (Aktif) emir ağırlığı
+    sentiment_decay_ms: "ENV(NEWS_DECAY_MS)"        # Haberin etkisini kademeli yitirme süresi (Örn: 4 Saat)
+    mempool_urgency_impact: "Ağ tıkanıklığı pre-trade (işlem öncesi) anomali olarak modele dahil edilir."

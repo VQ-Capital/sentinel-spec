@@ -1,0 +1,17 @@
+logic:
+  id: "NEURAL_NLP_ENGINE_V2_DUAL_CORE"
+  objective: "Finansal metinleri ve insan dilini mikrosaniyeler içinde -1.0 (Düşüş) ile +1.0 (Yükseliş) arası saf matematiksel duygu skoruna (Sentiment) çevirmek."
+  
+  tiers:
+    tier_0_lexicon:
+      type: "O(1) Hash Map (Fast-Path)"
+      description: "Kritik kelimeleri (Hack, SEC, ETF, Scam) AI'a göndermeden anında skorlar. Bekleme süresi 0ms. İşlem yükünü azaltır."
+    
+    tier_1_neural:
+      type: "ONNX Runtime (CUDA / TensorRT)"
+      model: "FinancialBERT (Quantized INT8/FP16)"
+      description: "Karmaşık cümlelerin bağlamını anlar. Model Docker imajına gömülüdür (Baked), dış dünyaya API isteği yapmaz."
+      
+  watchdog:
+    timeout_sla_ms: "ENV(SLA_TIMEOUT_MS)" # Örn: 15ms
+    fallback_strategy: "Graceful Degradation. LLM belirtilen sürede yanıt veremezse, işlem panic olmaz. Puan 0.0 kabul edilip yutulur ve sistem akmaya devam eder."
