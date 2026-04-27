@@ -60,6 +60,11 @@ message MarketStateVector {
   // Qdrant'a gömülecek ham vektör dizisi
   repeated double embeddings = 7;
   double chain_urgency = 8; // ✅ YENİ: Zincir Aciliyet Skoru
+
+  // 🚀 YENİ: UI İÇİN KOORDİNATLAR (Projection)
+  float map_x = 9;
+  float map_y = 10;
+  bool is_gold = 11; // Bu an geçmişte kâr getirdi mi?
 }
 
 // ✅ YENİ EKLENEN PROTOKOL
