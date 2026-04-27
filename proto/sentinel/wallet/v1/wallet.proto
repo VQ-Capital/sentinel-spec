@@ -7,9 +7,11 @@ package sentinel.wallet.v1;
 // sentinel-wallet servisi tarafından saniyede bir üretilir.
 // Execution servisi bu veriyi referans alarak emir büyüklüğünü hesaplar.
 message EquitySnapshot {
-  double total_equity_usd = 1;     // Toplam Varlık (Boştaki + Teminattaki)
+  double total_equity_usd = 1; // Toplam Varlık (Boştaki + Teminattaki)
   double available_margin_usd = 2; // İşleme girebilecek serbest bakiye
   double total_unrealized_pnl = 3; // Anlık yüzen PnL
-  int64 timestamp = 4;             // Unix Milisaniye
-  bool is_reconciled = 5;          // True: Borsa ile eşleşti (Güvenli), False: Sadece yerel tahmin
+  int64 timestamp = 4; // Unix Milisaniye
+  bool is_reconciled = 5; // True: Borsa ile eşleşti (Güvenli), False: Sadece yerel tahmin
+  double max_drawdown_pct = 6; // 🚀 YENİ: Maksimum Düşüş Yüzdesi
+  double sharpe_ratio = 7; // 🚀 YENİ: Risk/Getiri Oranı
 }
