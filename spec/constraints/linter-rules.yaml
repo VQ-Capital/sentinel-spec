@@ -33,10 +33,19 @@ linter_rules:
   - id: HFT-004
     name: "strict_protobuf_only"
     severity: "error"
-    # ✅ DÜZELTME: Ingest servisleri (Binance/Mempool json okuduğu için) hariç tutuldu.
     target_repo: "(sentinel-inference|sentinel-execution|sentinel-storage|sentinel-wallet|sentinel-api)"
     description: "İç servis haberleşmesinde JSON/Serde kullanılamaz. Sadece Prost (Protobuf)."
     match_files: ["**/*.rs"]
     forbidden_patterns:
       - regex: 'serde_json::to_string|serde_json::from_str'
         message: "VIOLATION: JSON parsing in hot-loop is slow. Internal IPC must use Prost/Protobuf."
+
+  - id: HFT-005
+    name: "pure_rust_ml_only"
+    severity: "fatal"
+    target_repo: "(sentinel-inference|sentinel-intelligence)"
+    description: "V5 Mimarisinde C++ ML Binding kütüphaneleri (ort, tch) YASAKTIR. Sadece tract ve ndarray kullanılabilir."
+    match_files: ["Cargo.toml"]
+    forbidden_patterns:
+      - regex: '(ort|tch|cuda)\s*='
+        message: "VIOLATION: C++ ML bindings (ort/tch) detected! Use pure Rust 'tract' or 'ndarray'."
