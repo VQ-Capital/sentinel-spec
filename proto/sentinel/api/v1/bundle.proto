@@ -1,9 +1,10 @@
+// ========== DOSYA: sentinel-spec/proto/sentinel/api/v1/bundle.proto ==========
 syntax = "proto3";
 package sentinel.api.v1;
 
 import "sentinel/execution/v1/execution.proto";
 import "sentinel/market/v1/market_data.proto";
-import "sentinel/wallet/v1/wallet.proto"; // YENİ: Wallet import edildi
+import "sentinel/wallet/v1/wallet.proto";
 
 message StreamBundle {
   oneof message {
@@ -12,15 +13,17 @@ message StreamBundle {
     sentinel.execution.v1.TradeSignal signal = 3;
     ControlCommand command = 4;
     sentinel.wallet.v1.EquitySnapshot equity = 5;
-    sentinel.market.v1.MarketStateVector vector = 6; // ✅ YENİ: Z-Score verisi eklendi
+    sentinel.market.v1.MarketStateVector vector = 6;
+    sentinel.execution.v1.ExecutionRejection rejection = 7; // 🔥 YENİ: RCA Logları Terminal'e akacak
   }
 }
 
 message ControlCommand {
   enum CommandType {
     COMMAND_TYPE_UNSPECIFIED = 0;
-    COMMAND_TYPE_STOP_ALL = 1;
+    COMMAND_TYPE_STOP_ALL = 1; // Mevcut: Sadece işlemleri durdurur
     COMMAND_TYPE_START_ALL = 2;
+    COMMAND_TYPE_EXTINCTION_PROTOCOL = 3; // 🔥 YENİ: Panic Sell to USDC & Shutdown (Siyah Kuğu)
   }
   CommandType type = 1;
 }

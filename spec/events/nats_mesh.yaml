@@ -10,13 +10,13 @@ mesh:
     market_states:
       subjects: ["state.vector.*"]
       publisher: "sentinel-inference"
-      consumers: ["sentinel-storage", "sentinel-api"] # API terminale Z-Score çizdirmek için okur
+      consumers: ["sentinel-storage", "sentinel-api"] 
       payload: "sentinel.market.v1.MarketStateVector"
 
     trade_signals:
       subjects: ["signal.trade.*"]
       publisher: "sentinel-inference"
-      consumers: ["sentinel-execution", "sentinel-api"] # API terminalde göstermek için okur
+      consumers: ["sentinel-execution", "sentinel-api"] 
       payload: "sentinel.execution.v1.TradeSignal"
 
     execution_reports:
@@ -24,6 +24,13 @@ mesh:
       publisher: "sentinel-execution"
       consumers: ["sentinel-storage", "sentinel-api", "sentinel-wallet"]
       payload: "sentinel.execution.v1.ExecutionReport"
+      
+    # 🔥 YENİ: RCA Akışı Ağ Topolojisine Eklendi
+    execution_rejections:
+      subjects: ["execution.rejection.*"]
+      publisher: "sentinel-execution"
+      consumers: ["sentinel-storage", "sentinel-api", "sentinel-optimizer"]
+      payload: "sentinel.execution.v1.ExecutionRejection"
 
     system_control:
       subjects: ["control.command"]
@@ -34,7 +41,7 @@ mesh:
     wallet_snapshots:
       subjects: ["wallet.equity.snapshot"]
       publisher: "sentinel-wallet"
-      consumers: ["sentinel-execution", "sentinel-api"] # TERMINAL YERİNE API OKUR (Köprü)
+      consumers: ["sentinel-execution", "sentinel-api"] 
       payload: "sentinel.wallet.v1.EquitySnapshot"
 
     raw_news:
@@ -55,7 +62,6 @@ mesh:
       consumers: ["sentinel-inference", "sentinel-storage"]
       payload: "sentinel.market.v1.OrderbookDepth"
 
-    # ✅ YENİ: MEMPOOL VERİ AKIŞI MESH AĞINA EKLENDİ
     chain_urgency:
       subjects: ["chain.urgency.*"]
       publisher: "sentinel-chain-ingest"
